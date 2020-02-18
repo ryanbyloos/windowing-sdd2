@@ -1,0 +1,27 @@
+<project>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete dir="doc"/>
+    </target>
+
+    <target name="build">
+        <mkdir dir="build"/>
+        <javac includeantruntime="false" srcdir="./src" destdir="build">
+            <classpath>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="Main" fork="true" classpath="build"/>
+    </target>
+
+    <target name="doc">
+        <mkdir dir="doc"/>
+        <javadoc destdir="doc">
+            <fileset dir="src"/>
+        </javadoc>
+    </target>
+
+</project>
