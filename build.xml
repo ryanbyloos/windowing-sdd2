@@ -1,20 +1,20 @@
 <project>
 
     <target name="clean">
-        <delete dir="build"/>
+        <delete dir="out"/>
         <delete dir="doc"/>
     </target>
 
     <target name="build">
-        <mkdir dir="build"/>
-        <javac includeantruntime="false" srcdir="./src" destdir="build">
+        <mkdir dir="out"/>
+        <javac includeantruntime="false" srcdir="./src" destdir="out">
             <classpath>
             </classpath>
         </javac>
     </target>
 
     <target name="run" depends="build">
-        <java classname="Main" fork="true" classpath="build"/>
+        <java classname="Main" fork="true" classpath="out"/>
     </target>
 
     <target name="doc">

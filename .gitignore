@@ -23,4 +23,7 @@
 hs_err_pid*
 
 # Project-specific files
+*.iml
+.idea
+out
 enonce.pdf
