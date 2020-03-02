@@ -1,4 +1,4 @@
-package data;
+package structure;
 
 public class PrioritySearchTree {
 }
