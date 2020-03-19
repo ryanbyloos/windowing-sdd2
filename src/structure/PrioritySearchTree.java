@@ -8,19 +8,18 @@ public class PrioritySearchTree {
 
     public PrioritySearchTree(String path) throws IOException {
         //Construction of the ArrayList that contains all the segments (tabs of Double)
-        ArrayList segments = ConstructionArray(path);
+        ArrayList<Double[]> segments = ConstructionArray(path);
         // at this point all the segments are in tabs inside the ArrayList.
 
         //First I have to find the segment with the lower x coordinate.
         // 1) I start by sorting the segments (x values)
         // 2) I can find the root (lower x coordinate)
 
-        // ---> 1) I start by sorting the segments (x values)
-        segments = SortCoordinateX(segments);
-        // --- > 2) I can find the root (lower x coordinate)
-        //TODO if the x is =, then look at coordinate y
+        // ---> 1) I start by sorting the segments (x values and y values)
+        segments = SortCoordinate(segments);
+        // --- > 2) I can find the root (lower x coordinate AND y)
         int positionRoot = FindMinX(segments);
-        System.out.println(positionRoot);
+        System.out.println(segments.get(positionRoot)[0]); //TODO DELETE
     }
 
     public ArrayList<Double[]> ConstructionArray(String path) throws IOException {
@@ -47,15 +46,20 @@ public class PrioritySearchTree {
         return segments;
     }
 
-    public ArrayList<Double[]> SortCoordinateX(ArrayList<Double[]> pSegments) {
+    public ArrayList<Double[]> SortCoordinate(ArrayList<Double[]> pSegments) {
         for (Double[] tab : pSegments) {
-            if (tab[0] > tab[1]) {
-                Double temp = tab[0];
-                tab[0] = tab[1];
-                tab[1] = temp;
-            }
+            if (tab[0] > tab[1])
+                InvertCoord(tab, 0, 1);
+            if (tab[2] > tab[3])
+                InvertCoord(tab, 2, 3);
         }
         return pSegments;
+    }
+
+    public void InvertCoord(Double[] pTab, int pCoord0, int pCoord1) { //TODO not sure about this method
+        Double temp = pTab[pCoord0];
+        pTab[pCoord0] = pTab[pCoord1];
+        pTab[pCoord1] = temp;
     }
 
     public int FindMinX(ArrayList<Double[]> pSegments) {
@@ -69,9 +73,12 @@ public class PrioritySearchTree {
                 for (int i=1; i<pSegments.size(); i++) {
                     compare = pSegments.get(j)[0];
                     compareTo = pSegments.get(i)[0];
-                    if (compare > compareTo) {
+                    if (compare > compareTo) { //TODO if the x is =, then look at coordinate y
                         positionMinX = i;
                         j = positionMinX;
+                    }
+                    else if (compare == compareTo) {
+                        if () //TODO look at y here go to sleep now
                     }
                 }
                 return positionMinX;
