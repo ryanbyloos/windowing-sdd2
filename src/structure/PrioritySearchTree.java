@@ -28,15 +28,18 @@ public class PrioritySearchTree {
     }
 
     public PrioritySearchTree(String path) throws IOException {
-        //Construction of the ArrayList that contains all the segments (tabs of Double)
+        // Construction of the ArrayList that contains all the segments (tabs of Double)
         ArrayList<Double[]> segments = ConstructionArray(path);
         // at this point all the segments are in tabs inside the ArrayList.
         ArrayList<Node> nodes = new ArrayList<Node>();
 
-        //First I have to find the segment with the lower x coordinate.
+        // First I have to find the segment with the lower x coordinate.
         // 1) I start by sorting the segments (x values)
         // 2) Create the nodes
         // 3) I can find the root (lower x coordinate)
+        // 4) Sort the nodes with y coordinate
+        // 5) Compute (find) the index of the median of the nodes' array
+        // 6) Build the tree
 
         // ---> 1) I start by sorting the segments (x values and y values)
         segments = SortCoordinate(segments);
@@ -54,6 +57,20 @@ public class PrioritySearchTree {
         int positionRootInNodes = 2*positionRootInSegments;
         // ----------> 2 times because a segment is composed of 2 points and the smaller is always the first one.
         root = nodes.remove(positionRootInNodes);
+        // ---> 4) Sort the nodes with y coordinate
+        nodes.sort((node0, node1) -> {
+            if (node0.y == node1.y)
+                return 0;
+            return (node0.y<=node1.y ? -1 : 1);
+        });
+        // the lambda expression create a comparator for the nodes. The minimum is going to be the first element of the
+        // ArrayList
+        // ---> 5) Compute (find) the index of the median of the nodes' array
+        int nbrOfNodes = nodes.size();
+        int indMedian = nbrOfNodes / 2;
+        // ---> 6) Build the tree
+        //TODO let's go
+
 
         System.out.println(positionRootInSegments); //TODO DELETE +2 because it's the line in the txt file (for check)
         System.out.println(root.x); //TODO DELETE
