@@ -2,15 +2,31 @@ package graphics;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import structure.PrioritySearchTree;
+
 import java.io.File;
+import java.io.IOException;
 
 public class MainApplication extends Application {
+
+    public GraphicsContext gc;
+    public PrioritySearchTree tree;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    public void draw(PrioritySearchTree tree, GraphicsContext gc) {
+        //TODO
+    }
 
     @Override
     public void start(Stage stage) {
@@ -31,15 +47,19 @@ public class MainApplication extends Application {
 
         openFileItem.setOnAction(event -> {
             File file = fileChooser.showOpenDialog(stage);
-            if (file != null){
+            if (file != null) {
                 //TODO Extract the data from the selected file
+                try {
+                    tree = new PrioritySearchTree(file.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         exitItem.setOnAction(event -> System.exit(0));
         editWindowItem.setOnAction(event -> {
             //TODO Allow the user to modify the window size
         });
-
 
         // Add menuItems to the Menus
         fileMenu.getItems().addAll(openFileItem, exitItem);
@@ -48,16 +68,15 @@ public class MainApplication extends Application {
         // Add Menus to the MenuBar
         menuBar.getMenus().addAll(fileMenu, editMenu);
 
-        BorderPane root = new BorderPane();
-        root.setTop(menuBar);
+        VBox root = new VBox();
         Scene scene = new Scene(root, 800, 600);
+
+        Canvas canvas = new Canvas(scene.getWidth() - menuBar.getWidth(), scene.getHeight() - menuBar.getHeight());
+        gc = canvas.getGraphicsContext2D();
+        root.getChildren().addAll(menuBar, canvas);
 
         stage.setTitle("Windowing App");
         stage.setScene(scene);
         stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

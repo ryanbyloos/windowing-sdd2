@@ -1,5 +1,8 @@
 package structure;
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PrioritySearchTree {
@@ -29,9 +32,9 @@ public class PrioritySearchTree {
 
     public PrioritySearchTree(String path) throws IOException {
         // Construction of the ArrayList that contains all the segments (tabs of Double)
-        ArrayList<Double[]> segments = ConstructionArray(path);
+        ArrayList<Double[]> segments = buildArray(path);
         // at this point all the segments are in tabs inside the ArrayList.
-        ArrayList<Node> nodes = new ArrayList<Node>();
+        ArrayList<Node> nodes = new ArrayList<>();
 
         // First I have to find the segment with the lower x coordinate.
         // 1) I start by sorting the segments (x values)
@@ -42,7 +45,7 @@ public class PrioritySearchTree {
         // 6) Build the tree
 
         // ---> 1) I start by sorting the segments (x values and y values)
-        segments = SortCoordinate(segments);
+        segments = sortCoordinate(segments);
         // ---> 2) Creation of the nodes
         for (Double[] tab : segments) {
             Node node0 = new Node(tab[0], tab[1]);
@@ -53,15 +56,15 @@ public class PrioritySearchTree {
             nodes.add(node1);
         }
         // ---> 3) I can find the root (lower x coordinate)
-        int positionRootInSegments = FindMinX(segments);
-        int positionRootInNodes = 2*positionRootInSegments;
+        int positionRootInSegments = findMinX(segments);
+        int positionRootInNodes = 2 * positionRootInSegments;
         // ----------> 2 times because a segment is composed of 2 points and the smaller is always the first one.
         root = nodes.remove(positionRootInNodes);
         // ---> 4) Sort the nodes with y coordinate
         nodes.sort((node0, node1) -> {
             if (node0.y == node1.y)
                 return 0;
-            return (node0.y<=node1.y ? -1 : 1);
+            return (node0.y <= node1.y ? -1 : 1);
         });
         // the lambda expression create a comparator for the nodes. The minimum is going to be the first element of the
         // ArrayList
@@ -76,11 +79,11 @@ public class PrioritySearchTree {
         System.out.println(root.x); //TODO DELETE
     }
 
-    public ArrayList<Double[]> ConstructionArray(String path) throws IOException {
-        ArrayList<Double[]> segments = new ArrayList<Double[]>();
-        String readed = "";
+    private ArrayList<Double[]> buildArray(String path) throws IOException {
+        ArrayList<Double[]> segments = new ArrayList<>();
+        String readed;
         int numberOfLines = 0;
-        Double[] tab = null;
+        Double[] tab;
         String[] temp;
         BufferedReader br;
         FileReader fileR;
@@ -100,23 +103,23 @@ public class PrioritySearchTree {
         return segments;
     }
 
-    public ArrayList<Double[]> SortCoordinate(ArrayList<Double[]> pSegments) {
+    private ArrayList<Double[]> sortCoordinate(ArrayList<Double[]> pSegments) {
         for (Double[] tab : pSegments) {
             if (tab[0] > tab[2]) {
-                InvertCoord(tab, 0, 2);
-                InvertCoord(tab, 1, 3);
+                invertCoord(tab, 0, 2);
+                invertCoord(tab, 1, 3);
             }
         }
         return pSegments;
     }
 
-    public void InvertCoord(Double[] pTab, int pCoord0, int pCoord1) { //TODO not sure about this method
+    private void invertCoord(Double[] pTab, int pCoord0, int pCoord1) { //TODO not sure about this method
         Double temp = pTab[pCoord0];
         pTab[pCoord0] = pTab[pCoord1];
         pTab[pCoord1] = temp;
     }
 
-    public int FindMinX(ArrayList<Double[]> pSegments) {
+    private int findMinX(ArrayList<Double[]> pSegments) {
         if (pSegments.isEmpty()) //TODO throw exception instead
             return -1;
         else {
@@ -124,7 +127,7 @@ public class PrioritySearchTree {
             int positionMinX = 0;
             double compareTo;
             int j = 0;
-            for (int i=1; i<pSegments.size(); i++) {
+            for (int i = 1; i < pSegments.size(); i++) {
                 compare = pSegments.get(j)[0];
                 compareTo = pSegments.get(i)[0];
                 if (compare > compareTo) {
@@ -133,16 +136,6 @@ public class PrioritySearchTree {
                 }
             }
             return positionMinX;
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            PrioritySearchTree prio = new PrioritySearchTree("/home/herosfate/Documents/Unif/2019-2020/BaB3" +
-                    "/Quad1/Structures_de_donnees2/Project/windowing-sdd2/src/scenes/1000.txt");
-        } catch (IOException e) {
-            //e.printStackTrace();
-            System.out.println("rip");
         }
     }
 }
