@@ -9,6 +9,8 @@ public class PrioritySearchTree {
     //TODO add the nodes here
     //the PST will be a heap with nodes in it.
     private final Node root;
+    private final PrioritySearchTree leftTree;
+    private final PrioritySearchTree rightTree;
 
     public class Node {
         private final double x;
@@ -70,13 +72,50 @@ public class PrioritySearchTree {
         // ArrayList
         // ---> 5) Compute (find) the index of the median of the nodes' array
         int nbrOfNodes = nodes.size();
-        int indMedian = nbrOfNodes / 2;
+        int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
         // ---> 6) Build the tree
-        //TODO let's go
-
+        ArrayList<Node> nodesLeft = new ArrayList<>(nodes.subList(0,indMedian+1));
+        ArrayList<Node> nodesRight = new ArrayList<>(nodes.subList(indMedian+1,nbrOfNodes));
+        // +1 because subList to from i to j but j not included
+        leftTree = new PrioritySearchTree(nodesLeft);
+        rightTree = new PrioritySearchTree(nodesRight);
 
         System.out.println(positionRootInSegments); //TODO DELETE +2 because it's the line in the txt file (for check)
         System.out.println(root.x); //TODO DELETE
+    }
+
+    private PrioritySearchTree(ArrayList<Node> pNodes) {
+        // 1) Find the root
+        // 2) Compute (find) the index of the median of the nodes' array
+        // 3) Build the tree
+
+        // ---> 1) Find the root
+        int positionRootInNodes = findRoot(pNodes);
+        root = pNodes.remove(positionRootInNodes);
+        // ---> 2) Compute (find) the index of the median of the nodes' array
+        int nbrOfNodes = pNodes.size();
+        int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
+        // ---> 3) Build the tree
+        if (indMedian > 0) {
+            ArrayList<Node> nodesLeft = new ArrayList<>(pNodes.subList(0, indMedian + 1));
+            ArrayList<Node> nodesRight = new ArrayList<>(pNodes.subList(indMedian + 1, nbrOfNodes));
+            // +1 because subList to from i to j but j not included
+            leftTree = new PrioritySearchTree(nodesLeft);
+            rightTree = new PrioritySearchTree(nodesRight);
+        }
+        else {
+            if (indMedian == 0)
+                leftTree = new PrioritySearchTree(pNodes.get(0));
+            else
+                leftTree = null;
+            rightTree = null;
+        }
+    }
+
+    private PrioritySearchTree(Node pNode) {
+        root = pNode;
+        leftTree = null;
+        rightTree = null;
     }
 
     private ArrayList<Double[]> buildArray(String path) throws IOException {
@@ -119,8 +158,29 @@ public class PrioritySearchTree {
         pTab[pCoord1] = temp;
     }
 
+    private int findRoot(ArrayList<Node> pNodes) {
+        if (pNodes.isEmpty()) //TODO move condition to PrioritySearchTree
+            return -1;
+        else {
+            double compare;
+            int positionMinX = 0;
+            double compareTo;
+            int j = 0;
+            for (int i = 1; i < pNodes.size(); i++) {
+                compare = pNodes.get(j).getX();
+                compareTo = pNodes.get(i).getX();
+                if (compare > compareTo) {
+                    positionMinX = i;
+                    j = positionMinX;
+                }
+            }
+            return positionMinX;
+        }
+
+    }
+
     private int findMinX(ArrayList<Double[]> pSegments) {
-        if (pSegments.isEmpty()) //TODO throw exception instead
+        if (pSegments.isEmpty()) //TODO move condition to PrioritySearchTree
             return -1;
         else {
             double compare;
