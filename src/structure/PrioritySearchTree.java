@@ -1,6 +1,7 @@
 package structure;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,19 @@ public class PrioritySearchTree {
     private final Node root;
     private final PrioritySearchTree leftTree;
     private final PrioritySearchTree rightTree;
+    private final double median;
+
+    public PrioritySearchTree getLeftTree() {
+        return leftTree;
+    }
+
+    public PrioritySearchTree getRightTree() {
+        return rightTree;
+    }
+
+    public double getMedian() {
+        return median;
+    }
 
     public class Node {
         private final double x;
@@ -26,13 +40,16 @@ public class PrioritySearchTree {
             return x;
         }
 
+        public double getY() {
+            return y;
+        }
+
         public void setLink(Node pNode) {
             linkedTo = pNode;
         }
-
     }
 
-    public PrioritySearchTree(String path) throws IOException {
+    public PrioritySearchTree(String path) {
         // Construction of the ArrayList that contains all the segments (tabs of Double)
         ArrayList<Double[]> segments = buildArray(path);
         // at this point all the segments are in tabs inside the ArrayList.
@@ -73,9 +90,10 @@ public class PrioritySearchTree {
         // ---> 5) Compute (find) the index of the median of the nodes' array
         int nbrOfNodes = nodes.size();
         int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
+        median = nodes.get(indMedian).getY();
         // ---> 6) Build the tree
-        ArrayList<Node> nodesLeft = new ArrayList<>(nodes.subList(0,indMedian+1));
-        ArrayList<Node> nodesRight = new ArrayList<>(nodes.subList(indMedian+1,nbrOfNodes));
+        ArrayList<Node> nodesLeft = new ArrayList<>(nodes.subList(0, indMedian + 1));
+        ArrayList<Node> nodesRight = new ArrayList<>(nodes.subList(indMedian + 1, nbrOfNodes));
         // +1 because subList to from i to j but j not included
         leftTree = new PrioritySearchTree(nodesLeft);
         rightTree = new PrioritySearchTree(nodesRight);
@@ -95,6 +113,7 @@ public class PrioritySearchTree {
         // ---> 2) Compute (find) the index of the median of the nodes' array
         int nbrOfNodes = pNodes.size();
         int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
+        median = pNodes.get(indMedian).getY();
         // ---> 3) Build the tree
         if (indMedian > 0) {
             ArrayList<Node> nodesLeft = new ArrayList<>(pNodes.subList(0, indMedian + 1));
@@ -102,8 +121,7 @@ public class PrioritySearchTree {
             // +1 because subList to from i to j but j not included
             leftTree = new PrioritySearchTree(nodesLeft);
             rightTree = new PrioritySearchTree(nodesRight);
-        }
-        else {
+        } else {
             if (indMedian == 0)
                 leftTree = new PrioritySearchTree(pNodes.get(0));
             else
@@ -116,9 +134,14 @@ public class PrioritySearchTree {
         root = pNode;
         leftTree = null;
         rightTree = null;
+        median = root.getY();
     }
 
-    private ArrayList<Double[]> buildArray(String path) throws IOException {
+    public boolean isLeaf() {
+        return leftTree == null && rightTree == null;
+    }
+
+    private ArrayList<Double[]> buildArray(String path) {
         ArrayList<Double[]> segments = new ArrayList<>();
         String readed;
         int numberOfLines = 0;
@@ -126,19 +149,26 @@ public class PrioritySearchTree {
         String[] temp;
         BufferedReader br;
         FileReader fileR;
-        fileR = new FileReader(path);
-        br = new BufferedReader(fileR);
-        while ((readed = br.readLine()) != null) {
-            if (numberOfLines != 0) { // line 0 is the size of the window with all the segments inside
-                tab = new Double[4];
-                temp = readed.split(" ");
-                for (int i = 0; i < 4; i++) {
-                    tab[i] = Double.parseDouble(temp[i]);
+        try {
+            fileR = new FileReader(path);
+            br = new BufferedReader(fileR);
+            while ((readed = br.readLine()) != null) {
+                if (numberOfLines != 0) { // line 0 is the size of the window with all the segments inside
+                    tab = new Double[4];
+                    temp = readed.split(" ");
+                    for (int i = 0; i < 4; i++) {
+                        tab[i] = Double.parseDouble(temp[i]);
+                    }
+                    segments.add(tab);
                 }
-                segments.add(tab);
+                numberOfLines += 1;
             }
-            numberOfLines += 1;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return segments;
     }
 
@@ -176,7 +206,6 @@ public class PrioritySearchTree {
             }
             return positionMinX;
         }
-
     }
 
     private int findMinX(ArrayList<Double[]> pSegments) {

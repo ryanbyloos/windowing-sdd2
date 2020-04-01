@@ -49,11 +49,7 @@ public class MainApplication extends Application {
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 //TODO Extract the data from the selected file
-                try {
-                    tree = new PrioritySearchTree(file.getPath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                tree = new PrioritySearchTree(file.getPath());
             }
         });
         exitItem.setOnAction(event -> System.exit(0));
