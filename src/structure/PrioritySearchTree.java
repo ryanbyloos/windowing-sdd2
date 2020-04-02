@@ -76,7 +76,7 @@ public class PrioritySearchTree {
         // ---> 2) Compute (find) the index of the median of the nodes' array
         int nbrOfNodes = pNodes.size();
         int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
-//        median = 0;
+        //        median = 0;
         // ---> 3) Build the tree
         if (indMedian > 0) {
             ArrayList<PSTNode> nodesLeft = new ArrayList<>(pNodes.subList(0, indMedian + 1));
