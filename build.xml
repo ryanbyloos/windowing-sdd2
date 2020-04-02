@@ -14,7 +14,7 @@
     </target>
 
     <target name="run" depends="build">
-        <java classname="Main" fork="true" classpath="out"/>
+        <java classname="TestWindowing" fork="true" classpath="out"/>
     </target>
 
     <target name="doc">
