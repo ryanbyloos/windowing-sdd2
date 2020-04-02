@@ -1,82 +1,22 @@
 package structure;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class PrioritySearchTree {
-    //TODO add the nodes here
     //the PST will be a heap with nodes in it.
-    private final Node root;
+    private final PSTNode root;
     private final PrioritySearchTree leftTree;
     private final PrioritySearchTree rightTree;
     private final double median;
-
-    public PrioritySearchTree getLeftTree() {
-        return leftTree;
-    }
-
-    public PrioritySearchTree getRightTree() {
-        return rightTree;
-    }
-
-    public double getMedian() {
-        return median;
-    }
-
-    public Node getRoot() {
-        return root;
-    }
-
-    public class Node {
-        private final double x;
-        private final double y;
-        private Node linkedTo;
-
-        public Node(Double pX, Double pY) {
-            x = pX;
-            y = pY;
-        }
-
-        public Node getLinkedTo() {
-            return linkedTo;
-        }
-
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
-
-        public void setLink(Node pNode) {
-            linkedTo = pNode;
-        }
-
-        public boolean inWindow(Double[] pWindow) {
-            boolean xIn = x >= pWindow[0] && x <= pWindow[1];
-            boolean yIn = y >= pWindow[2] && y <= pWindow[3];
-            boolean lxIn = linkedTo.getX() >= pWindow[0] && linkedTo.getX() <= pWindow[1];
-            boolean lyIn = linkedTo.getY() >= pWindow[2] && linkedTo.getY() <= pWindow[3];
-            boolean cutX = x < pWindow[0] && linkedTo.getX() > pWindow[1] && yIn;
-            // we can check on yIn only because all segments are horizontal
-            cutX |= linkedTo.getX() < pWindow[0] && x > pWindow[1] && yIn;
-            // "or" applied on cutX. If the initialisation or this line is True, cutX stay True.
-            boolean cutY = y < pWindow[2] && linkedTo.getY() > pWindow[3] && xIn;
-            cutY |= linkedTo.getY() < pWindow[2] && y > pWindow[3] && xIn;
-            return (xIn && yIn) || (lxIn && lyIn) || (cutX || cutY);
-            // the actual point is in the window or the link is in the window or the segment cross the window
-        }
-    }
 
     public PrioritySearchTree(String path) {
         // Construction of the ArrayList that contains all the segments (tabs of Double)
         ArrayList<Double[]> segments = buildArray(path);
         // at this point all the segments are in tabs inside the ArrayList.
-        ArrayList<Node> nodes = new ArrayList<>();
+        ArrayList<PSTNode> nodes = new ArrayList<>();
 
         // First I have to find the segment with the lower x coordinate.
         // 1) I start by sorting the segments (x values)
@@ -90,8 +30,8 @@ public class PrioritySearchTree {
         segments = sortCoordinate(segments);
         // ---> 2) Creation of the nodes
         for (Double[] tab : segments) {
-            Node node0 = new Node(tab[0], tab[1]);
-            Node node1 = new Node(tab[2], tab[3]);
+            PSTNode node0 = new PSTNode(tab[0], tab[1]);
+            PSTNode node1 = new PSTNode(tab[2], tab[3]);
             node0.setLink(node1);
             node1.setLink(node0);
             nodes.add(node0);
@@ -104,9 +44,9 @@ public class PrioritySearchTree {
         root = nodes.remove(positionRootInNodes);
         // ---> 4) Sort the nodes with y coordinate
         nodes.sort((node0, node1) -> {
-            if (node0.y == node1.y)
+            if (node0.getY() == node1.getY())
                 return 0;
-            return (node0.y <= node1.y ? -1 : 1);
+            return (node0.getY() <= node1.getY() ? -1 : 1);
         });
         // the lambda expression create a comparator for the nodes. The minimum is going to be the first element of the
         // ArrayList
@@ -115,17 +55,17 @@ public class PrioritySearchTree {
         int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
         median = nodes.get(indMedian).getY();
         // ---> 6) Build the tree
-        ArrayList<Node> nodesLeft = new ArrayList<>(nodes.subList(0, indMedian + 1));
-        ArrayList<Node> nodesRight = new ArrayList<>(nodes.subList(indMedian + 1, nbrOfNodes));
+        ArrayList<PSTNode> nodesLeft = new ArrayList<>(nodes.subList(0, indMedian + 1));
+        ArrayList<PSTNode> nodesRight = new ArrayList<>(nodes.subList(indMedian + 1, nbrOfNodes));
         // +1 because subList to from i to j but j not included
         leftTree = new PrioritySearchTree(nodesLeft);
         rightTree = new PrioritySearchTree(nodesRight);
 
         System.out.println(positionRootInSegments); //TODO DELETE +2 because it's the line in the txt file (for check)
-        System.out.println(root.x); //TODO DELETE
+        System.out.println(root.getX()); //TODO DELETE
     }
 
-    private PrioritySearchTree(ArrayList<Node> pNodes) {
+    private PrioritySearchTree(ArrayList<PSTNode> pNodes) {
         // 1) Find the root
         // 2) Compute (find) the index of the median of the nodes' array
         // 3) Build the tree
@@ -136,28 +76,48 @@ public class PrioritySearchTree {
         // ---> 2) Compute (find) the index of the median of the nodes' array
         int nbrOfNodes = pNodes.size();
         int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
-        median = pNodes.get(indMedian).getY();
+//        median = 0;
         // ---> 3) Build the tree
         if (indMedian > 0) {
-            ArrayList<Node> nodesLeft = new ArrayList<>(pNodes.subList(0, indMedian + 1));
-            ArrayList<Node> nodesRight = new ArrayList<>(pNodes.subList(indMedian + 1, nbrOfNodes));
+            ArrayList<PSTNode> nodesLeft = new ArrayList<>(pNodes.subList(0, indMedian + 1));
+            ArrayList<PSTNode> nodesRight = new ArrayList<>(pNodes.subList(indMedian + 1, nbrOfNodes));
             // +1 because subList to from i to j but j not included
             leftTree = new PrioritySearchTree(nodesLeft);
             rightTree = new PrioritySearchTree(nodesRight);
+            median = pNodes.get(indMedian).getY();
         } else {
-            if (indMedian == 0)
+            if (indMedian == 0) {
                 leftTree = new PrioritySearchTree(pNodes.get(0));
-            else
+                median = pNodes.get(indMedian).getY();
+            } else {
                 leftTree = null;
+                median = 0;
+            }
             rightTree = null;
         }
     }
 
-    private PrioritySearchTree(Node pNode) {
+    private PrioritySearchTree(PSTNode pNode) {
         root = pNode;
         leftTree = null;
         rightTree = null;
         median = root.getY();
+    }
+
+    public PrioritySearchTree getLeftTree() {
+        return leftTree;
+    }
+
+    public PrioritySearchTree getRightTree() {
+        return rightTree;
+    }
+
+    public double getMedian() {
+        return median;
+    }
+
+    public PSTNode getRoot() {
+        return root;
     }
 
     public boolean isLeaf() {
@@ -202,13 +162,13 @@ public class PrioritySearchTree {
         return pSegments;
     }
 
-    private void invertCoord(Double[] pTab, int pCoord0, int pCoord1) { //TODO not sure about this method
+    private void invertCoord(Double[] pTab, int pCoord0, int pCoord1) {
         Double temp = pTab[pCoord0];
         pTab[pCoord0] = pTab[pCoord1];
         pTab[pCoord1] = temp;
     }
 
-    private int findRoot(ArrayList<Node> pNodes) {
+    private int findRoot(ArrayList<PSTNode> pNodes) {
         if (pNodes.isEmpty()) //TODO move condition to PrioritySearchTree
             return -1;
         else {
@@ -247,4 +207,5 @@ public class PrioritySearchTree {
             return positionMinX;
         }
     }
+
 }
