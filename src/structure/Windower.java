@@ -7,14 +7,19 @@ import java.util.ArrayList;
 
 // we have to create a new Windower each time we open a new txt file
 public class Windower {
+
     private final Double[] windowSize;
     private Double[] searchWindow;
     private PrioritySearchTree split;
 
     public Windower(String path) {
-        windowSize = buildArray(path);
-        if (searchWindow == null)
-            searchWindow = windowSize;
+        this.windowSize = buildArray(path);
+        this.searchWindow = windowSize;
+    }
+
+    public Windower(String path, Double[] searchWindow) {
+        this.windowSize = buildArray(path);
+        this.searchWindow = searchWindow;
     }
 
     // read the first line of the "path" file and put it into an array
