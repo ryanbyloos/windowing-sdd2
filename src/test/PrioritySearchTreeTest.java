@@ -1,10 +1,12 @@
+package test;
+
 import org.junit.Assert;
 import org.junit.Test;
 import structure.PrioritySearchTree;
 
 public class PrioritySearchTreeTest {
-    PrioritySearchTree tree = new PrioritySearchTree("/home/herosfate/Documents/Unif/2019-2020/BaB3/Quad1/" +
-            "Structures_de_donnees2/Project/windowing-sdd2/src/scenes/1000.txt");
+    PrioritySearchTree tree = new PrioritySearchTree("src/scenes/1000.txt");
+
     @Test
     public void conformityTest() {
         Assert.assertTrue(isConform(tree));
