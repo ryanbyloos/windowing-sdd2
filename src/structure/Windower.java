@@ -3,8 +3,6 @@ package structure;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.lang.reflect.Array;
-import java.time.Period;
 import java.util.ArrayList;
 
 // we have to create a new Windower each time we open a new txt file
@@ -63,6 +61,7 @@ public class Windower {
     //TODO finish it
     public ArrayList<PrioritySearchTree.Node> queryPrioSearchTree(PrioritySearchTree pTree) {
         ArrayList<PrioritySearchTree.Node> splitPath = searchPath(pTree);
+        ArrayList<PrioritySearchTree.Node> allPaths = new ArrayList<>(splitPath);
         // follow the path to find y and y' and on this path add the nodes if they're in the window
         // to find y, follow a path till find a leaf depending on the median. Each time the median >= y go to the left
         // for the recursive call and call reportInSubtree on the right subtree. Each time the median < y go to the
@@ -70,6 +69,9 @@ public class Windower {
         // For y' its <= and >.
         ArrayList<PrioritySearchTree.Node> pathToY = pathToY(split.getLeftTree());
         ArrayList<PrioritySearchTree.Node> pathToYp = pathToYp(split.getRightTree());
+        allPaths.addAll(pathToY);
+        allPaths.addAll(pathToYp);
+        return allPaths;
     }
 
     private ArrayList<PrioritySearchTree.Node> pathToY(PrioritySearchTree pTree) {
@@ -94,10 +96,25 @@ public class Windower {
     }
 
     //TODO do the same for y' (juste change >= to <= and > to < and searchWindow[3] instead of 2
-
     private ArrayList<PrioritySearchTree.Node> pathToYp(PrioritySearchTree pTree) {
-        double median = pTree.getMedian();
         ArrayList<PrioritySearchTree.Node> pathYp = new ArrayList<>();
+        if (pTree == null)
+            return pathYp;
+        double median = pTree.getMedian();
+        PrioritySearchTree.Node root = pTree.getRoot();
+        if (inWindow(root))
+            pathYp.add(root);
+        if (pTree.isLeaf())
+            return pathYp;
+        if (median <= searchWindow[3]) {
+            pathYp.addAll(pathToY(pTree.getRightTree()));
+            pathYp.addAll(reportInSubtree(pTree.getLeftTree()));
+        }
+        else {
+            pathYp.addAll(pathToY(pTree.getLeftTree()));
+            pathYp.addAll(reportInSubtree(pTree.getRightTree()));
+        }
+        return pathYp;
     }
 
     private ArrayList<PrioritySearchTree.Node> searchPath(PrioritySearchTree pTree) {
