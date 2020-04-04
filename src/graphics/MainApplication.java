@@ -28,27 +28,30 @@ public class MainApplication extends Application {
         launch(args);
     }
 
-    public void updateCanvas(Window window, PrioritySearchTree pst) {
+    private void updateCanvas(Window window, PrioritySearchTree pst) {
         clearCanvas();
         this.currentWindow = window;
+        for (PSTNode n : window.queryPST(pst)) {
+            if (n != null && n.getLinkedTo() != null)
+                strokeScaledLine(n.getX(), n.getY(), n.getLinkedTo().getX(), n.getLinkedTo().getY());
+        }
+    }
 
-        Double[] w = window.searchWindow;
+    private void clearCanvas() {
+        this.currentWindow = null;
+        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+    }
+
+    private void strokeScaledLine(double x, double y, double xp, double yp) {
+        Double[] w = currentWindow.searchWindow;
         double rx = width / (2 * Math.max(-w[0], w[1]));
         double ry = height / (2 * Math.max(-w[2], w[3]));
         double ratio = Math.min(rx, ry);
 
-        for (PSTNode n : window.queryPST(pst)) {
-            if (n != null && n.getLinkedTo() != null)
-                gc.strokeLine(ratio * (n.getX()) + (width >> 1),
-                        ratio * (n.getY()) + (height >> 1),
-                        ratio * (n.getLinkedTo().getX()) + (width >> 1),
-                        ratio * (n.getLinkedTo().getY()) + (height >> 1));
-        }
-    }
-
-    public void clearCanvas() {
-        this.currentWindow = null;
-        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        gc.strokeLine(ratio * x + (width >> 1),
+                ratio * y + (height >> 1),
+                ratio * xp + (width >> 1),
+                ratio * yp + (height >> 1));
     }
 
     @Override
