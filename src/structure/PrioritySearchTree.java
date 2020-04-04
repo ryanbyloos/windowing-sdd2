@@ -1,6 +1,7 @@
 package structure;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +13,9 @@ public class PrioritySearchTree {
     private final PrioritySearchTree rightTree;
     private final double median;
 
-    public PrioritySearchTree(String path) {
+    public PrioritySearchTree(File file) {
         // Construction of the ArrayList that contains all the segments (tabs of Double)
-        ArrayList<Double[]> segments = buildArray(path);
+        ArrayList<Double[]> segments = buildArray(file);
         // at this point all the segments are in tabs inside the ArrayList.
         ArrayList<PSTNode> nodes = new ArrayList<>();
 
@@ -124,7 +125,7 @@ public class PrioritySearchTree {
         return leftTree == null && rightTree == null;
     }
 
-    private ArrayList<Double[]> buildArray(String path) {
+    private ArrayList<Double[]> buildArray(File file) {
         ArrayList<Double[]> segments = new ArrayList<>();
         String readed;
         int numberOfLines = 0;
@@ -133,7 +134,7 @@ public class PrioritySearchTree {
         BufferedReader br;
         FileReader fileR;
         try {
-            fileR = new FileReader(path);
+            fileR = new FileReader(file);
             br = new BufferedReader(fileR);
             while ((readed = br.readLine()) != null) {
                 if (numberOfLines != 0) { // line 0 is the size of the window with all the segments inside

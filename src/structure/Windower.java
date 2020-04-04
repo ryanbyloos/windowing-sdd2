@@ -1,5 +1,6 @@
 package structure;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -12,21 +13,21 @@ public class Windower {
     private Double[] searchWindow;
     private PrioritySearchTree split;
 
-    public Windower(String path) {
-        this.windowSize = buildArray(path);
+    public Windower(File file) {
+        this.windowSize = buildArray(file);
         this.searchWindow = windowSize;
     }
 
-    public Windower(String path, Double[] searchWindow) {
-        this.windowSize = buildArray(path);
+    public Windower(File file, Double[] searchWindow) {
+        this.windowSize = buildArray(file);
         this.searchWindow = searchWindow;
     }
 
     // read the first line of the "path" file and put it into an array
-    private Double[] buildArray(String path) {
+    private Double[] buildArray(File file) {
         Double[] segments = new Double[4];
         try {
-            FileReader fileReader = new FileReader(path);
+            FileReader fileReader = new FileReader(file);
             LineNumberReader lnr = new LineNumberReader(fileReader);
             String line = lnr.readLine();
             String[] temp = line.split(" ");

@@ -19,7 +19,7 @@ import java.io.File;
 public class MainApplication extends Application {
 
     public GraphicsContext gc;
-    public String currentFilePath;
+    public File file;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,7 +30,6 @@ public class MainApplication extends Application {
         clearCanvas();
         double x = gc.getCanvas().getWidth() / 2;
         double y = gc.getCanvas().getHeight() / 2;
-
         for (PSTNode n : windower.queryPST(pst)) {
             if (n != null && n.getLinkedTo() != null)
                 gc.strokeLine(n.getX() + x, n.getY() + y, n.getLinkedTo().getX() + x, n.getLinkedTo().getY() + y);
@@ -49,7 +48,7 @@ public class MainApplication extends Application {
         // Create MenuBar
         MenuBar menuBar = new MenuBar();
 
-        // Create menus
+        // Create Menus
         Menu fileMenu = new Menu("File");
         Menu editMenu = new Menu("Edit");
 
@@ -59,23 +58,23 @@ public class MainApplication extends Application {
         MenuItem exitItem = new MenuItem("Exit");
         MenuItem editWindowItem = new MenuItem("Edit window");
 
+        // Set actions to each MenuItems
         openFileItem.setOnAction(event -> {
-            File file = fileChooser.showOpenDialog(stage);
+            file = fileChooser.showOpenDialog(stage);
             if (file != null) {
-                currentFilePath = file.getPath();
-                updateCanvas(new Windower(currentFilePath), new PrioritySearchTree(currentFilePath));
+                updateCanvas(new Windower(file), new PrioritySearchTree(file));
             }
         });
         clearCanvasItem.setOnAction(event -> clearCanvas());
         exitItem.setOnAction(event -> System.exit(0));
         editWindowItem.setOnAction(event -> {
             //TODO Allow the user to modify the window size
-            Double[] size = {-100.0, 100.0, -100.0, 100.0};
-            if (currentFilePath != null)
-                updateCanvas(new Windower(currentFilePath, size), new PrioritySearchTree(currentFilePath));
+            Double[] size = {-1000.0, 1000.0, -100.0, 100.0};
+            if (file != null)
+                updateCanvas(new Windower(file, size), new PrioritySearchTree(file));
         });
 
-        // Add menuItems to the Menus
+        // Add MenuItems to the Menus
         fileMenu.getItems().addAll(openFileItem, clearCanvasItem, exitItem);
         editMenu.getItems().addAll(editWindowItem);
 
@@ -90,6 +89,7 @@ public class MainApplication extends Application {
         root.getChildren().addAll(menuBar, canvas);
 
         stage.setTitle("Windowing App");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
