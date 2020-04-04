@@ -7,18 +7,18 @@ import java.io.LineNumberReader;
 import java.util.ArrayList;
 
 // we have to create a new Windower each time we open a new txt file
-public class Windower {
+public class Window {
 
     private final Double[] windowSize;
-    private Double[] searchWindow;
+    public Double[] searchWindow;
     private PrioritySearchTree split;
 
-    public Windower(File file) {
+    public Window(File file) {
         this.windowSize = buildArray(file);
         this.searchWindow = windowSize;
     }
 
-    public Windower(File file, Double[] searchWindow) {
+    public Window(File file, Double[] searchWindow) {
         this.windowSize = buildArray(file);
         this.searchWindow = searchWindow;
     }

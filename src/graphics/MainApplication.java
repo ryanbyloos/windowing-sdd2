@@ -12,7 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import structure.PSTNode;
 import structure.PrioritySearchTree;
-import structure.Windower;
+import structure.Window;
 
 import java.io.File;
 
@@ -20,23 +20,26 @@ public class MainApplication extends Application {
 
     public GraphicsContext gc;
     public File file;
+    private Window currentWindow;
 
     public static void main(String[] args) {
         launch(args);
     }
 
 
-    public void updateCanvas(Windower windower, PrioritySearchTree pst) {
+    public void updateCanvas(Window window, PrioritySearchTree pst) {
         clearCanvas();
+        this.currentWindow = window;
         double x = gc.getCanvas().getWidth() / 2;
         double y = gc.getCanvas().getHeight() / 2;
-        for (PSTNode n : windower.queryPST(pst)) {
+        for (PSTNode n : window.queryPST(pst)) {
             if (n != null && n.getLinkedTo() != null)
                 gc.strokeLine(n.getX() + x, n.getY() + y, n.getLinkedTo().getX() + x, n.getLinkedTo().getY() + y);
         }
     }
 
     public void clearCanvas() {
+        this.currentWindow = null;
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
     }
 
@@ -62,16 +65,17 @@ public class MainApplication extends Application {
         openFileItem.setOnAction(event -> {
             file = fileChooser.showOpenDialog(stage);
             if (file != null) {
-                updateCanvas(new Windower(file), new PrioritySearchTree(file));
+                updateCanvas(new Window(file), new PrioritySearchTree(file));
             }
         });
         clearCanvasItem.setOnAction(event -> clearCanvas());
         exitItem.setOnAction(event -> System.exit(0));
         editWindowItem.setOnAction(event -> {
-            //TODO Allow the user to modify the window size
-            Double[] size = {-1000.0, 1000.0, -100.0, 100.0};
-            if (file != null)
-                updateCanvas(new Windower(file, size), new PrioritySearchTree(file));
+            if (currentWindow != null) {
+                WindowDialog windowDialog = new WindowDialog(currentWindow.searchWindow);
+                Double[] size = windowDialog.showAndWait().get();
+                updateCanvas(new Window(file, size), new PrioritySearchTree(file));
+            }
         });
 
         // Add MenuItems to the Menus
