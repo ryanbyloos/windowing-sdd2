@@ -9,7 +9,7 @@ import java.util.ArrayList;
 // we have to create a new Windower each time we open a new txt file
 public class Window {
 
-    private final Double[] windowSize;
+    public final Double[] windowSize;
     public Double[] searchWindow;
     private PrioritySearchTree split;
 

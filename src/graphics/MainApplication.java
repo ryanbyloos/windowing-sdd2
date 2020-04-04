@@ -18,23 +18,31 @@ import java.io.File;
 
 public class MainApplication extends Application {
 
-    public GraphicsContext gc;
-    public File file;
+    private final int width = 800;
+    private final int height = 600;
+    private GraphicsContext gc;
+    private File file;
     private Window currentWindow;
 
     public static void main(String[] args) {
         launch(args);
     }
 
-
     public void updateCanvas(Window window, PrioritySearchTree pst) {
         clearCanvas();
         this.currentWindow = window;
-        double x = gc.getCanvas().getWidth() / 2;
-        double y = gc.getCanvas().getHeight() / 2;
+
+        Double[] w = window.searchWindow;
+        double rx = width / (2 * Math.max(-w[0], w[1]));
+        double ry = height / (2 * Math.max(-w[2], w[3]));
+        double ratio = Math.min(rx, ry);
+
         for (PSTNode n : window.queryPST(pst)) {
             if (n != null && n.getLinkedTo() != null)
-                gc.strokeLine(n.getX() + x, n.getY() + y, n.getLinkedTo().getX() + x, n.getLinkedTo().getY() + y);
+                gc.strokeLine(ratio * (n.getX()) + (width >> 1),
+                        ratio * (n.getY()) + (height >> 1),
+                        ratio * (n.getLinkedTo().getX()) + (width >> 1),
+                        ratio * (n.getLinkedTo().getY()) + (height >> 1));
         }
     }
 
@@ -72,7 +80,7 @@ public class MainApplication extends Application {
         exitItem.setOnAction(event -> System.exit(0));
         editWindowItem.setOnAction(event -> {
             if (currentWindow != null) {
-                WindowDialog windowDialog = new WindowDialog(currentWindow.searchWindow);
+                WindowDialog windowDialog = new WindowDialog(currentWindow);
                 Double[] size = windowDialog.showAndWait().get();
                 updateCanvas(new Window(file, size), new PrioritySearchTree(file));
             }
@@ -86,7 +94,7 @@ public class MainApplication extends Application {
         menuBar.getMenus().addAll(fileMenu, editMenu);
 
         VBox root = new VBox();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, width, height);
 
         Canvas canvas = new Canvas(scene.getWidth() - menuBar.getWidth(), scene.getHeight() - menuBar.getHeight());
         gc = canvas.getGraphicsContext2D();
