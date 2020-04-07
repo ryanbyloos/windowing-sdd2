@@ -39,8 +39,8 @@ public class PrioritySearchTree {
             nodes.add(node1);
         }
         // ---> 3) I can find the root (lower x coordinate)
-        int positionRootInSegments = findMinX(segments);
-        int positionRootInNodes = 2 * positionRootInSegments;
+        int positionRootInSegments = findMinX(segments); //TODO delete
+        int positionRootInNodes = findRoot(nodes);
         // ----------> 2 times because a segment is composed of 2 points and the smaller is always the first one.
         root = nodes.remove(positionRootInNodes);
         // ---> 4) Sort the nodes with y coordinate
@@ -61,9 +61,6 @@ public class PrioritySearchTree {
         // +1 because subList to from i to j but j not included
         leftTree = new PrioritySearchTree(nodesLeft);
         rightTree = new PrioritySearchTree(nodesRight);
-
-        System.out.println(positionRootInSegments); //TODO DELETE +2 because it's the line in the txt file (for check)
-        System.out.println(root.getX()); //TODO DELETE
     }
 
     private PrioritySearchTree(ArrayList<PSTNode> pNodes) {
@@ -77,7 +74,6 @@ public class PrioritySearchTree {
         // ---> 2) Compute (find) the index of the median of the nodes' array
         int nbrOfNodes = pNodes.size();
         int indMedian = (nbrOfNodes % 2 == 0 ? nbrOfNodes / 2 - 1 : nbrOfNodes / 2);
-        //        median = 0;
         // ---> 3) Build the tree
         if (indMedian > 0) {
             ArrayList<PSTNode> nodesLeft = new ArrayList<>(pNodes.subList(0, indMedian + 1));
@@ -86,13 +82,15 @@ public class PrioritySearchTree {
             leftTree = new PrioritySearchTree(nodesLeft);
             rightTree = new PrioritySearchTree(nodesRight);
             median = pNodes.get(indMedian).getY();
-        } else {
+        }
+        else {
             if (indMedian == 0) {
                 leftTree = new PrioritySearchTree(pNodes.get(0));
                 median = pNodes.get(indMedian).getY();
-            } else {
+            }
+            else {
                 leftTree = null;
-                median = 0;
+                median = root.getY();
             }
             rightTree = null;
         }

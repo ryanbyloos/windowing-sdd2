@@ -29,7 +29,8 @@ public class PrioritySearchTreeTest {
             if (!conform)
                 System.out.println(left.getMedian() + " " + right.getMedian());
             conform = conform && isConform(left) && isConform(right);
-        } else if (left != null)
+        }
+        else if (left != null)
             conform = isConform(left);
         else if (right != null)
             conform = isConform(right);

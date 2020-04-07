@@ -84,7 +84,8 @@ public class Window {
         if (median >= searchWindow[2]) {
             pathY.addAll(pathToY(pTree.getLeftTree()));
             pathY.addAll(reportInSubtree(pTree.getRightTree()));
-        } else {
+        }
+        else {
             pathY.addAll(pathToY(pTree.getRightTree()));
             pathY.addAll(reportInSubtree(pTree.getLeftTree()));
         }
@@ -104,7 +105,8 @@ public class Window {
         if (median <= searchWindow[3]) {
             pathYp.addAll(pathToY(pTree.getRightTree()));
             pathYp.addAll(reportInSubtree(pTree.getLeftTree()));
-        } else {
+        }
+        else {
             pathYp.addAll(pathToY(pTree.getLeftTree()));
             pathYp.addAll(reportInSubtree(pTree.getRightTree()));
         }
