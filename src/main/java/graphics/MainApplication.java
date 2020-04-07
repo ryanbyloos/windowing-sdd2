@@ -31,9 +31,15 @@ public class MainApplication extends Application {
     private void updateCanvas(Window window, PrioritySearchTree pst) {
         clearCanvas();
         this.currentWindow = window;
+
+        Double[] w = currentWindow.searchWindow;
+        double rx = width / (2 * Math.max(-w[0], w[1]));
+        double ry = height / (2 * Math.max(-w[2], w[3]));
+        double ratio = Math.min(rx, ry);
+
         for (PSTNode n : window.queryPST(pst)) {
             if (n != null && n.getLinkedTo() != null)
-                strokeScaledLine(n.getX(), n.getY(), n.getLinkedTo().getX(), n.getLinkedTo().getY());
+                strokeScaledLine(ratio, n.getX(), n.getY(), n.getLinkedTo().getX(), n.getLinkedTo().getY());
         }
     }
 
@@ -42,12 +48,7 @@ public class MainApplication extends Application {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
     }
 
-    private void strokeScaledLine(double x, double y, double xp, double yp) {
-        Double[] w = currentWindow.searchWindow;
-        double rx = width / (2 * Math.max(-w[0], w[1]));
-        double ry = height / (2 * Math.max(-w[2], w[3]));
-        double ratio = Math.min(rx, ry);
-
+    private void strokeScaledLine(double ratio, double x, double y, double xp, double yp) {
         gc.strokeLine(ratio * x + (width >> 1),
                 ratio * y + (height >> 1),
                 ratio * xp + (width >> 1),
@@ -56,8 +57,9 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Declare some objects
+        // Declare the fileChooser for later
         final FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("src/main/java/scenes"));
 
         // Create MenuBar
         MenuBar menuBar = new MenuBar();
