@@ -4,6 +4,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import structure.Window;
 
+/**
+ * This is a specialized Dialog that is used to allow the user to set the window size.
+ */
 public class WindowDialog extends Dialog<Double[]> {
 
     Double[] maxSize;
@@ -67,6 +70,11 @@ public class WindowDialog extends Dialog<Double[]> {
         });
     }
 
+    /**
+     * Method used to apply a numeric filter using the String.matches(regex) method.
+     *
+     * @param textFields All the textFields to which a numeric filter will be applied.
+     */
     public void applyNumericFilter(TextField... textFields) {
         for (TextField textField : textFields) {
             textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -77,14 +85,22 @@ public class WindowDialog extends Dialog<Double[]> {
         }
     }
 
+    /**
+     * Method used to convert values in textFields to a Double array.
+     *
+     * @param textFields textFields from which values are extracted.
+     * @param results    Double array in which values are stored.
+     */
     public void getDoubleFromTextField(TextField[] textFields, Double[] results) {
-        for (int i = 0; i < textFields.length; i++) {
-            if (textFields[i].isDisabled()) {
-                results[i] = maxSize[i];
-            } else {
-                String text = textFields[i].getText();
-                if (!text.isEmpty())
-                    results[i] = Double.parseDouble(text);
+        if (textFields.length == results.length) {
+            for (int i = 0; i < textFields.length; i++) {
+                if (textFields[i].isDisabled()) {
+                    results[i] = maxSize[i];
+                } else {
+                    String text = textFields[i].getText();
+                    if (!text.isEmpty())
+                        results[i] = Double.parseDouble(text);
+                }
             }
         }
     }

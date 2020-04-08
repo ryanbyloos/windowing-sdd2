@@ -16,6 +16,9 @@ import structure.Window;
 
 import java.io.File;
 
+/**
+ * This is the graphical app itself, it extends Application from JavaFX.
+ */
 public class MainApplication extends Application {
 
     private final int width = 800;
@@ -28,6 +31,12 @@ public class MainApplication extends Application {
         launch(args);
     }
 
+    /**
+     * This method is used to draw all the segments of the windowed tree on the canvas.
+     *
+     * @param window The window used to choose the segments in the pst
+     * @param pst    The PrioritySearchTree from which we draw the segments.
+     */
     private void updateCanvas(Window window, PrioritySearchTree pst) {
         clearCanvas();
         this.currentWindow = window;
@@ -43,11 +52,20 @@ public class MainApplication extends Application {
         }
     }
 
+    /**
+     * This method is used to clear the canvas area.
+     */
     private void clearCanvas() {
         this.currentWindow = null;
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
     }
 
+    /**
+     * This method is a wrapper for the strokeLine() method from the GraphicsContext class.
+     * It is used so the window is scaled to the canvas. It simulate a zoom in/out to make the window more perceptible.
+     *
+     * @param ratio the ratio to get the right scale.
+     */
     private void strokeScaledLine(double ratio, double x, double y, double xp, double yp) {
         gc.strokeLine(ratio * x + (width >> 1),
                 ratio * y + (height >> 1),
