@@ -13,20 +13,21 @@ public class PrioritySearchTree {
     private final PrioritySearchTree rightTree;
     private final double median;
 
+    /**
+     * 1) I start by sorting the segments (x values)
+     * 2) Create the nodes
+     * 3) I can find the root (lower x coordinate)
+     * 4) Sort the nodes with y coordinate
+     * 5) Compute (find) the index of the median of the nodes' array
+     * 6) Build the tree
+     * First constructor. "Initialise" the PST construction
+     * @param file The file readed with the nodes in it
+     */
     public PrioritySearchTree(File file) {
         // Construction of the ArrayList that contains all the segments (tabs of Double)
         ArrayList<Double[]> segments = buildArray(file);
         // at this point all the segments are in tabs inside the ArrayList.
         ArrayList<PSTNode> nodes = new ArrayList<>();
-
-        // First I have to find the segment with the lower x coordinate.
-        // 1) I start by sorting the segments (x values)
-        // 2) Create the nodes
-        // 3) I can find the root (lower x coordinate)
-        // 4) Sort the nodes with y coordinate
-        // 5) Compute (find) the index of the median of the nodes' array
-        // 6) Build the tree
-
         // ---> 1) I start by sorting the segments (x values and y values)
         segments = sortCoordinate(segments);
         // ---> 2) Creation of the nodes
@@ -63,11 +64,14 @@ public class PrioritySearchTree {
         rightTree = new PrioritySearchTree(nodesRight);
     }
 
+    /**
+     * 1) Find the root
+     * 2) Compute (find) the index of the median of the nodes' array
+     * 3) Build the tree
+     * Second part of the PST constuction. Used using an ArrayList instead of a File.
+     * @param pNodes ArrayList with all the nodes in it
+     */
     private PrioritySearchTree(ArrayList<PSTNode> pNodes) {
-        // 1) Find the root
-        // 2) Compute (find) the index of the median of the nodes' array
-        // 3) Build the tree
-
         // ---> 1) Find the root
         int positionRootInNodes = findRoot(pNodes);
         root = pNodes.remove(positionRootInNodes);
@@ -96,6 +100,10 @@ public class PrioritySearchTree {
         }
     }
 
+    /**
+     * Last part of the initialization. Used for add leaves.
+     * @param pNode A Node object.
+     */
     private PrioritySearchTree(PSTNode pNode) {
         root = pNode;
         leftTree = null;
@@ -119,10 +127,17 @@ public class PrioritySearchTree {
         return root;
     }
 
+    /**
+     * @return True if the current "PST" is a leaf, False otherwise.
+     */
     public boolean isLeaf() {
         return leftTree == null && rightTree == null;
     }
 
+    /**
+     * @param file The file with the segments.
+     * @return An ArrayList with all the segments.
+     */
     private ArrayList<Double[]> buildArray(File file) {
         ArrayList<Double[]> segments = new ArrayList<>();
         String readed;
@@ -151,6 +166,13 @@ public class PrioritySearchTree {
         return segments;
     }
 
+    //TODO we can remove this with some modifications on the code. Can cause the lack of performance.
+    /**
+     * Sort the segments. With x < x' then invert the 2 points.
+     * Used to find the minimum x value.
+     * @param pSegments The ArrayList with all the segments.
+     * @return An ArrayList with the segments sorted.
+     */
     private ArrayList<Double[]> sortCoordinate(ArrayList<Double[]> pSegments) {
         for (Double[] tab : pSegments) {
             if (tab[0] > tab[2]) {
@@ -161,12 +183,24 @@ public class PrioritySearchTree {
         return pSegments;
     }
 
+    //TODO If we change sortCoordinate, we can change this one too. (remove)
+    /**
+     * Invert 2 points in a tab.
+     * @param pTab The tab with the four points.
+     * @param pCoord0 The first coordinate to invert.
+     * @param pCoord1 The second coordinate to invert.
+     */
     private void invertCoord(Double[] pTab, int pCoord0, int pCoord1) {
         Double temp = pTab[pCoord0];
         pTab[pCoord0] = pTab[pCoord1];
         pTab[pCoord1] = temp;
     }
 
+    /**
+     * Find the root in an ArrayList of Nodes.
+     * @param pNodes The ArrayList with all the nodes.
+     * @return The node with the minimum x value.
+     */
     private int findRoot(ArrayList<PSTNode> pNodes) {
         if (pNodes.isEmpty()) //TODO move condition to PrioritySearchTree
             return -1;
@@ -187,6 +221,11 @@ public class PrioritySearchTree {
         }
     }
 
+    /**
+     * Find the position of the point with the minimum x value on the segment's array.
+     * @param pSegments An ArrayList with all the segments.
+     * @return The position of the point with the minimum x value.
+     */
     private int findMinX(ArrayList<Double[]> pSegments) {
         if (pSegments.isEmpty()) //TODO move condition to PrioritySearchTree
             return -1;

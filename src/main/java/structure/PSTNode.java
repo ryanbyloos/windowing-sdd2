@@ -26,6 +26,11 @@ public class PSTNode {
         linkedTo = pNode;
     }
 
+    /**
+     * Determine if the segment is in the window.
+     * @param pWindow An array with the positions of the window.
+     * @return True if the point (or is link) is in the window. False otherwise.
+     */
     public boolean inWindow(Double[] pWindow) {
         boolean xIn = x >= pWindow[0] && x <= pWindow[1];
         boolean yIn = y >= pWindow[2] && y <= pWindow[3];
