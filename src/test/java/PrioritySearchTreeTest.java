@@ -5,10 +5,10 @@ import structure.PrioritySearchTree;
 import java.io.File;
 
 public class PrioritySearchTreeTest {
-    PrioritySearchTree tree1k = new PrioritySearchTree(new File("src/scenes/1000.txt"));
-    PrioritySearchTree tree5k = new PrioritySearchTree(new File("src/scenes/5000.txt"));
-    PrioritySearchTree tree10k = new PrioritySearchTree(new File("src/scenes/10000.txt"));
-    PrioritySearchTree tree100k = new PrioritySearchTree(new File("src/scenes/100000.txt"));
+    PrioritySearchTree tree1k = new PrioritySearchTree(new File("src/main/java/scenes/1000.txt"));
+    PrioritySearchTree tree5k = new PrioritySearchTree(new File("src/main/java/scenes/5000.txt"));
+    PrioritySearchTree tree10k = new PrioritySearchTree(new File("src/main/java/scenes/10000.txt"));
+    PrioritySearchTree tree100k = new PrioritySearchTree(new File("src/main/java/scenes/100000.txt"));
 
     @Test
     public void conformityTest() {
