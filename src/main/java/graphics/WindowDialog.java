@@ -9,7 +9,7 @@ import structure.Window;
  */
 public class WindowDialog extends Dialog<Double[]> {
 
-    Double[] maxSize;
+    public Double[] maxSize;
 
     public WindowDialog(Window window) {
         setHeaderText("Edit window");
@@ -27,30 +27,10 @@ public class WindowDialog extends Dialog<Double[]> {
         CheckBox infY = new CheckBox("−∞");
         CheckBox infYp = new CheckBox("+∞");
 
-        infX.setOnAction(e -> {
-            if (infX.isSelected())
-                X.setDisable(true);
-            else
-                X.setDisable(false);
-        });
-        infXp.setOnAction(e -> {
-            if (infX.isSelected())
-                Xp.setDisable(true);
-            else
-                Xp.setDisable(false);
-        });
-        infY.setOnAction(e -> {
-            if (infY.isSelected())
-                Y.setDisable(true);
-            else
-                Y.setDisable(false);
-        });
-        infYp.setOnAction(e -> {
-            if (infYp.isSelected())
-                Yp.setDisable(true);
-            else
-                Yp.setDisable(false);
-        });
+        infX.setOnAction(e -> X.setDisable(infX.isSelected()));
+        infXp.setOnAction(e -> Xp.setDisable(infX.isSelected()));
+        infY.setOnAction(e -> Y.setDisable(infY.isSelected()));
+        infYp.setOnAction(e -> Yp.setDisable(infYp.isSelected()));
 
         applyNumericFilter(X, Xp, Y, Yp);
 
@@ -75,7 +55,7 @@ public class WindowDialog extends Dialog<Double[]> {
      *
      * @param textFields All the textFields to which a numeric filter will be applied.
      */
-    public void applyNumericFilter(TextField... textFields) {
+    private void applyNumericFilter(TextField... textFields) {
         for (TextField textField : textFields) {
             textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
                 if (!newValue.matches("-?\\d*([.]\\d*)?")) {
@@ -91,7 +71,7 @@ public class WindowDialog extends Dialog<Double[]> {
      * @param textFields textFields from which values are extracted.
      * @param results    Double array in which values are stored.
      */
-    public void getDoubleFromTextField(TextField[] textFields, Double[] results) {
+    private void getDoubleFromTextField(TextField[] textFields, Double[] results) {
         if (textFields.length == results.length) {
             for (int i = 0; i < textFields.length; i++) {
                 if (textFields[i].isDisabled()) {
