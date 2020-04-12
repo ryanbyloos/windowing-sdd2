@@ -165,6 +165,7 @@ public class PrioritySearchTree {
         return segments;
     }
 
+    @Deprecated
     /**
      * Sort the segments. With x < x' then invert the 2 points.
      * Used to find the minimum x value.
@@ -182,6 +183,7 @@ public class PrioritySearchTree {
         return pSegments;
     }
 
+    @Deprecated
     /**
      * Invert 2 points in a tab.
      * @param pTab The tab with the four points.
