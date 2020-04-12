@@ -80,6 +80,8 @@ public class Window {
             else
                 split = pTree;
         }
+        if (pTree.isLeaf())
+            split = pTree;
         return path;
     }
 
@@ -105,6 +107,7 @@ public class Window {
         else {
             pathY.addAll(pathToY(pTree.getRightTree()));
             pathY.addAll(reportInSubtree(pTree.getLeftTree()));
+            // We add the ones on the right to find those who cut the window.
         }
         return pathY;
     }
@@ -130,6 +133,7 @@ public class Window {
         else {
             pathYp.addAll(pathToY(pTree.getLeftTree()));
             pathYp.addAll(reportInSubtree(pTree.getRightTree()));
+            // We add the ones on the right to find those who cut the window.
         }
         return pathYp;
     }
@@ -157,7 +161,6 @@ public class Window {
 
     /**
      * @param pNode A node
-     * @return True if the node is in the window. False otherwise.
      */
     // return true if the node or his link are in the window
     private boolean inWindow(PSTNode pNode) {

@@ -29,7 +29,7 @@ public class PrioritySearchTree {
         // at this point all the segments are in tabs inside the ArrayList.
         ArrayList<PSTNode> nodes = new ArrayList<>();
         // ---> 1) I start by sorting the segments (x values and y values)
-        segments = sortCoordinate(segments);
+        // segments = sortCoordinate(segments);
         // ---> 2) Creation of the nodes
         for (Double[] tab : segments) {
             PSTNode node0 = new PSTNode(tab[0], tab[1]);
@@ -40,7 +40,7 @@ public class PrioritySearchTree {
             nodes.add(node1);
         }
         // ---> 3) I can find the root (lower x coordinate)
-        int positionRootInSegments = findMinX(segments); //TODO delete
+        // int positionRootInSegments = findMinX(segments); //TODO delete
         int positionRootInNodes = findRoot(nodes);
         root = nodes.remove(positionRootInNodes);
         // ---> 4) Sort the nodes with y coordinate
@@ -165,12 +165,12 @@ public class PrioritySearchTree {
         return segments;
     }
 
-    //TODO we can remove this with some modifications on the code. Can cause the lack of performance.
     /**
      * Sort the segments. With x < x' then invert the 2 points.
      * Used to find the minimum x value.
      * @param pSegments The ArrayList with all the segments.
      * @return An ArrayList with the segments sorted.
+     * @deprecated
      */
     private ArrayList<Double[]> sortCoordinate(ArrayList<Double[]> pSegments) {
         for (Double[] tab : pSegments) {
@@ -182,12 +182,12 @@ public class PrioritySearchTree {
         return pSegments;
     }
 
-    //TODO If we change sortCoordinate, we can change this one too. (remove)
     /**
      * Invert 2 points in a tab.
      * @param pTab The tab with the four points.
      * @param pCoord0 The first coordinate to invert.
      * @param pCoord1 The second coordinate to invert.
+     * @deprecated
      */
     private void invertCoord(Double[] pTab, int pCoord0, int pCoord1) {
         Double temp = pTab[pCoord0];
@@ -201,7 +201,7 @@ public class PrioritySearchTree {
      * @return The node with the minimum x value.
      */
     private int findRoot(ArrayList<PSTNode> pNodes) {
-        if (pNodes.isEmpty()) //TODO move condition to PrioritySearchTree
+        if (pNodes.isEmpty()) // not supposed to happend
             return -1;
         else {
             double compare;
