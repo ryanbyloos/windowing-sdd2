@@ -42,7 +42,6 @@ public class PrioritySearchTree {
         // ---> 3) I can find the root (lower x coordinate)
         int positionRootInSegments = findMinX(segments); //TODO delete
         int positionRootInNodes = findRoot(nodes);
-        // ----------> 2 times because a segment is composed of 2 points and the smaller is always the first one.
         root = nodes.remove(positionRootInNodes);
         // ---> 4) Sort the nodes with y coordinate
         nodes.sort((node0, node1) -> {
