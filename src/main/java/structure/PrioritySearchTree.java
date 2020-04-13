@@ -205,7 +205,7 @@ public class PrioritySearchTree {
      * @return The node with the minimum x value.
      */
     private int findRoot(ArrayList<PSTNode> pNodes) {
-        if (pNodes.isEmpty()) // not supposed to happend
+        if (pNodes.isEmpty()) // not supposed to happen
             return -1;
         else {
             double compare;
