@@ -40,7 +40,6 @@ public class PrioritySearchTree {
             nodes.add(node1);
         }
         // ---> 3) I can find the root (lower x coordinate)
-        // int positionRootInSegments = findMinX(segments); //TODO delete
         int positionRootInNodes = findRoot(nodes);
         root = nodes.remove(positionRootInNodes);
         // ---> 4) Sort the nodes with y coordinate
