@@ -77,7 +77,6 @@ public class MainApplication extends Application {
     public void start(Stage stage) {
         // Declare the fileChooser for later
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("src/main/java/scenes"));
 
         // Create MenuBar
         MenuBar menuBar = new MenuBar();
@@ -94,6 +93,9 @@ public class MainApplication extends Application {
 
         // Set actions to each MenuItems
         openFileItem.setOnAction(event -> {
+            File initialFile = new File("src/main/java/scenes");
+            if (initialFile.exists())
+                fileChooser.setInitialDirectory(initialFile);
             file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 updateCanvas(new Window(file), new PrioritySearchTree(file));
