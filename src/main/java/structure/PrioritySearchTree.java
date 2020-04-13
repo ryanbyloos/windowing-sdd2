@@ -28,8 +28,11 @@ public class PrioritySearchTree {
         ArrayList<Double[]> segments = buildArray(file);
         // at this point all the segments are in tabs inside the ArrayList.
         ArrayList<PSTNode> nodes = new ArrayList<>();
-        // ---> 1) I start by sorting the segments (x values and y values)
-        // segments = sortCoordinate(segments);
+        /*
+        This step has been removed for improvement
+         ---> 1) I start by sorting the segments (x values and y values)
+         segments = sortCoordinate(segments);
+         */
         // ---> 2) Creation of the nodes
         for (Double[] tab : segments) {
             PSTNode node0 = new PSTNode(tab[0], tab[1]);
